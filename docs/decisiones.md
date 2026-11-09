@@ -52,3 +52,24 @@ avisar de que se acercan mucho a la etiqueta.
 
 * 3.326 proyectos no tienen ningún código EuroSciVoc.
 * Algunos resúmenes son anómalos: el más corto tiene 1 palabra. Revisarlo en el EDA y decidir.
+
+## D5. Preprocesado: lematización con spaCy (semana 2)
+
+Se lematiza en lugar de hacer stemming porque devuelve palabras reales, lo que hace los términos y
+pesos interpretables. Se quitan las stopwords de spaCy y los tokens no alfabéticos o de menos de 3
+letras. Las «stopwords del dominio» se dejan a `max_df`. Se procesa solo `summary`, no `title`, que
+podría añadirse como mejora. Resultado: mediana de 163 lemas por documento y 1 documento vacío.
+
+## D6. Clasificador sklearn: SVM lineal en lugar de regresión logística (semana 2)
+
+La regresión logística con `lbfgs` tarda unos 90 s por ajuste. Con `saga` y
+`class_weight="balanced"` no converge en minutos. Con pesos uniformes da el mismo macro-F1 en val
+(0,36) que `LinearSVC`, que tarda unos 5 s. Se elige la SVM. Consecuencia: no hay probabilidades,
+solo puntuaciones (`decision_function`); para la evaluación basta con el argmax.
+
+## D7. TF-IDF + SVM: hiperparámetros elegidos (semana 2)
+
+Unigramas, `min_df=5`, `max_df=0,5`, `C=0,1`, `class_weight="balanced"`. Macro-F1 en val 0,403.
+Se eligió con una búsqueda en dos fases sobre validación (23 configuraciones distintas; ver README §3).
+Criterio de selección: macro-F1 en val. Los pesos balanceados aportan +4,7 puntos; el resto de
+diferencias son de 1–2 puntos, probablemente dentro del ruido de validación.

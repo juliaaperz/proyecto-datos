@@ -150,13 +150,119 @@ Un proyecto sobre fases topológicas en materia condensada, que es física, apar
     ejemplos. *other medical sciences* (7 en train) mezcla *forensic*, *genocide* y *sperm*.
 
 ## 3. Metodología
+
 ### 3.1. Preprocesado de texto
-### 3.2. Representaciones (TF-IDF, Word2Vec, embeddings contextuales)
-### 3.3. Modelos (scikit-learn, red PyTorch, fine-tuning de Transformer)
-### 3.4. Protocolo de validación y búsqueda de hiperparámetros
+
+Código: [`src/cordis/preprocess.py`](src/cordis/preprocess.py) y
+[`scripts/preprocess_text.py`](scripts/preprocess_text.py). Se aplica solo a `summary` y lo usan
+TF-IDF y Word2Vec. Los embeddings contextuales usan el texto sin preprocesar.
+
+1. **Tokenización y lematización** con spaCy `en_core_web_sm`. Se desactivan el parser y el NER,
+   que no hacen falta. Se lematiza en lugar de hacer stemming porque devuelve palabras reales
+   (*networks* → *network*), lo que hace interpretables los términos característicos y los pesos
+   del modelo.
+2. **Minúsculas.**
+3. **Filtrado:** solo tokens alfabéticos (`is_alpha`, que elimina números y puntuación), de 3 o
+   más caracteres, sin las 326 stopwords en inglés de spaCy.
+4. **La poda por frecuencia de documento** (`min_df`/`max_df`) **no se hace aquí**, sino en el
+   vectorizador, porque depende del corpus de entrenamiento.
+
+Como este paso trata cada documento por separado y no aprende nada del corpus, se aplica a todos
+los documentos sin riesgo de fuga. Tras el preprocesado, cada resumen tiene una mediana de **163
+lemas**. Solo un documento queda vacío: su resumen era únicamente «H2020».
+
+### 3.2. Representaciones
+
+#### TF-IDF
+
+Código: [`src/cordis/features.py`](src/cordis/features.py). Se usa `TfidfVectorizer` de
+scikit-learn sobre los lemas, con tf sublineal (1 + log tf), IDF suavizado y normalización ℓ2. El
+vocabulario y los pesos IDF se **ajustan solo con train**. Los hiperparámetros (`min_df`,
+`max_df`, n-gramas) se eligen en validación junto con el clasificador (§3.4):
+
+| n-gramas | min_df | max_df | vocabulario | macro-F1 val | accuracy val |
+|---|---|---|---|---|---|
+| **1** | **5** | **0,5** | **16.989** | **0,371** | 0,532 |
+| 1 | 5 | 1,0 | 16.992 | 0,370 | 0,533 |
+| 1 | 2 | 0,3 | 31.912 | 0,368 | 0,532 |
+| 1–2 | 5 | 0,5 | 111.056 | 0,359 | 0,541 |
+| 1–2 | 2 | 0,3 | 423.627 | 0,347 | 0,538 |
+
+<sub>Fase 1, con SVM C = 0,3 sin pesos de clase. La tabla completa con 12 configuraciones está en
+[results/tfidf_svm_vectorizer_table.csv](results/tfidf_svm_vectorizer_table.csv).</sub>
+
+* **`max_df` apenas influye.** Tras lematizar y quitar stopwords, solo 3 lemas superan el 50 % de
+  los documentos y unos 15 superan el 30 %. Además, el IDF ya reduce el peso de los términos
+  comunes.
+* **Los bigramas suben la accuracy unos +1 punto pero bajan el macro-F1 entre 1 y 2 puntos.**
+  El vocabulario pasa de unos 17.000 a 111.000 términos (o a 424.000 con `min_df=2`), y los
+  bigramas frecuentes se concentran en las clases grandes. Ojo: la comparación se hizo con C fijo, y la diferencia es del orden del
+  ruido en validación (§4), así que no se puede concluir que los bigramas empeoren.
+* **Elegido:** unigramas, `min_df=5`, `max_df=0,5`, con 16.989 términos.
+
+#### Word2Vec
+_Pendiente (bloque de Lucía Fournier)._
+
+#### Embeddings contextuales
+_Pendiente (bloque de María Sánchez)._
+
+### 3.3. Modelos
+
+#### SVM lineal (scikit-learn)
+
+Código: [`scripts/tfidf_svm.py`](scripts/tfidf_svm.py). Se usa `LinearSVC` (uno contra el resto).
+Los modelos lineales son la elección natural para TF-IDF, que es disperso y de alta
+dimensionalidad (Apéndice A.2).
+
+Primero se probó **regresión logística**, pero no compensaba. Con `lbfgs` tardaba unos 90 s por
+ajuste. Con `saga` bajaba a 10 s, pero no convergía en varios minutos al activar
+`class_weight="balanced"`, porque los pesos de clase llegan a ~100. Con pesos uniformes daba el
+mismo macro-F1 en validación (0,36) que la SVM, que tarda unos 5 s. Por eso se eligió la SVM.
+
+![Curva de validación](figures/tfidf_svm_validation_C.png)
+
+* **Los pesos de clase balanceados son la decisión más influyente.** Suben el macro-F1 en
+  validación de 0,356 a 0,403 (+4,7 puntos), a cambio de unos 3 puntos de accuracy en el C
+  elegido. Es el comportamiento esperado: penalizan más los errores en las clases pequeñas y así
+  se recuperan las minoritarias a costa de equivocarse algo más en las grandes.
+* **La regularización óptima es fuerte (C = 0,1).** Con C ≥ 1 el modelo sobreajusta a los
+  términos raros de train y las dos métricas caen.
+* **Configuración final:** TF-IDF (unigramas, `min_df=5`, `max_df=0,5`) + `LinearSVC(C=0,1,
+  class_weight="balanced")`.
+
+#### Red neuronal (PyTorch)
+_Pendiente._
+
+#### Transformer con fine-tuning
+_Pendiente._
+
+### 3.4. Protocolo de entrenamiento, validación y test
+
+* **Partición fija** de 22.366 / 4.792 / 4.793 proyectos (§1.2), común a todos los modelos.
+* **Selección de hiperparámetros:** se entrena con train y se elige el **macro-F1 en
+  validación**, que es la métrica principal del problema por el desbalance. Test **no** se usa
+  para ninguna decisión.
+* **Búsqueda en dos fases**, para que sea asumible en un portátil:
+  1. 12 configuraciones del vectorizador con el clasificador fijo.
+  2. 12 configuraciones del clasificador (C × pesos de clase) con el mejor vectorizador. Una de
+     ellas coincide con la de la fase 1, así que en total son 23 configuraciones distintas.
+  * **Limitación:** no explora interacciones como «bigramas + C distinto».
+* **Reproducibilidad:** todas las semillas están fijadas (`config.SEED = 42`). Cada configuración
+  probada se guarda en `results/*_search_l2.csv`.
+* La configuración elegida se reentrena con train y sus predicciones en val y test se guardan en
+  `results/preds/`. Las métricas de test se calculan **una sola vez**, en la evaluación
+  comparativa (§4), con la misma partición e intervalos de confianza para todos los modelos.
 
 ## 4. Resultados
 ### 4.1. Comparación representaciones × modelos (accuracy, macro-F1, IC)
+
+_Resultados preliminares en **validación** (los de test se calcularán al final, para todos los modelos a la vez):_
+
+| Modelo | Representación | Accuracy val | Macro-F1 val |
+|---|---|---|---|
+| Clase mayoritaria | — | 0,108 | 0,005 |
+| SVM lineal (C=0,1, balanced) | TF-IDF | 0,493 | 0,403 |
+
 ### 4.2. Nivel 1 frente a nivel 2
 ### 4.3. Análisis de errores (confusiones entre hermanas, predicciones en etiquetas descartadas)
 
@@ -176,6 +282,10 @@ pip install -r requirements.txt
 # o definid CORDIS_DATA_DIR con la carpeta donde estén.
 python scripts/build_dataset.py      # etiquetas + comprobaciones (usa splits/split.csv)
 python -m pytest -q                  # tests de la lógica de etiquetado
+python -m spacy download en_core_web_sm
+python scripts/preprocess_text.py    # lematización con spaCy (~10 min, reanudable)
+python scripts/tfidf_svm.py          # búsqueda TF-IDF + SVM en val (~6 min, reanudable)
+python scripts/plot_tfidf_search.py  # figura y tabla de la búsqueda
 ```
 
 En código:
