@@ -1,0 +1,20 @@
+,tipo,ausentes,% ausentes,ejemplo
+projectID,int64,0,0.0,115843
+acronym,object,0,0.0,EbolaMoDRAD
+title,object,0,0.0,Ebola Virus: Modern Approaches for developing beds
+summary,object,0,0.0,The current Ebola Virus Disease (EVD) outbreak has
+startDate,datetime64[ns],11,0.0,2015-02-01 00:00:00
+endDate,datetime64[ns],11,0.0,2018-01-31 00:00:00
+totalCost,float64,0,0.0,4300935.0
+ecMaxContribution,float64,0,0.0,4300935.0
+masterCall,object,20358,57.5,H2020-JTI-IMI2-2014-02-single-stage
+subCall,object,0,0.0,H2020-JTI-IMI2-2014-02-single-stage
+fundingScheme,object,0,0.0,IMI2-RIA
+rcn,int64,0,0.0,209451
+topic,object,0,0.0,IMI2-2014-02-05
+topic_title,object,0,0.0,Rapid diagnostic tests
+countryContr,object,0,0.0,BE|318125.0 DE|175000.0 DK|520875.0 FI|261250.0 FR
+coordinatorCountry,object,0,0.0,SE
+euroSciVocCode,object,3326,9.4,"[155, 56306972, 325, 137, 1609]"
+publicationID,object,18166,51.3,"['115843_202840_PUBLI', '115843_202838_PUBLI', '11"
+patentID,object,34499,97.5,"['46788450', '46789266']"
