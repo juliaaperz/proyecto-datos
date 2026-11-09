@@ -14,14 +14,19 @@ Entrega: **11-dic-2026, 23:59** (último commit). Presentación individual: sema
 
 ## Reparto
 
-| Persona | Bloque | Entregables (código + figuras para el README) |
-|---|---|---|
-| **A** | EDA + preprocesado + TF-IDF | `notebooks/01_eda.ipynb`; `src/cordis/preprocess.py` (spaCy, lematización, guardar tokens en caché); `src/cordis/features.py::tfidf` |
-| **B** | Word2Vec + red PyTorch | `features.py::word2vec` (entrenado con train; OOV); `src/cordis/nn.py` (MLP sobre las 3 representaciones, early stopping con val, curvas de aprendizaje) |
-| **C** | Transformers | Embeddings congelados (pooling y truncado/troceado > 512 tokens) guardados en `.npy`; fine-tuning en Colab (`notebooks/04_finetune_colab.ipynb`) |
-| **D** | Evaluación + sklearn + extensión | `src/cordis/evaluate.py` (accuracy, macro-F1, por clase, IC por bootstrap, confusiones entre hermanas, «predicción ∈ etiquetas descartadas»); regresión logística / SVM sobre las 3 representaciones; extensión |
+| Persona | Rama | Bloque | Entregables (código + figuras para el README) |
+|---|---|---|---|
+| **A · Lucía Mora** | `eda` | EDA + preprocesado + TF-IDF | `notebooks/01_eda.ipynb`; `src/cordis/preprocess.py` (spaCy, lematización, guardar tokens en caché); `src/cordis/features.py::tfidf` |
+| **B · Lucía Fournier** | `w2v-nn` | Word2Vec + red PyTorch | `features.py::word2vec` (entrenado con train; OOV); `src/cordis/nn.py` (MLP sobre las 3 representaciones, early stopping con val, curvas de aprendizaje) |
+| **C · María Sánchez** | `transformers` | Transformers | Embeddings congelados (pooling y truncado/troceado > 512 tokens) guardados en `.npy`; fine-tuning en Colab (`notebooks/04_finetune_colab.ipynb`) |
+| **D · Julia Pérez** | `eval` | Evaluación + sklearn + extensión | `src/cordis/evaluate.py` (accuracy, macro-F1, por clase, IC por bootstrap, confusiones entre hermanas, «predicción ∈ etiquetas descartadas»); regresión logística / SVM sobre las 3 representaciones; extensión |
 
-Todos: redactar en el README la sección de su bloque y preparar sus diapositivas. **Cada persona
+Julia Pérez, además, coordina el repositorio: revisa y fusiona las pull requests y mantiene el README
+como documento único. Las dependencias entre bloques son estas: el preprocesado de Lucía Mora lo usa
+Word2Vec (Lucía Fournier), y el módulo de evaluación de Julia lo usan todas para comparar. Por eso
+ambos deberían estar listos a mitad de la semana 2.
+
+Todas: redactar en el README la sección de su bloque y preparar sus diapositivas. **Cada persona
 debe poder defender todo el proyecto**, porque la presentación es individual.
 
 ## Normas del repositorio
@@ -35,6 +40,7 @@ debe poder defender todo el proyecto**, porque la presentación es individual.
 5. Las figuras que vayan al README se guardan en `figures/` (png) desde código, no capturas.
 6. Una rama por bloque (`eda`, `w2v-nn`, `transformers`, `eval`) y merge por pull request
    revisado por otra persona.
+   Revisiones cruzadas: Lucía Mora ↔ Lucía Fournier, María Sánchez ↔ Julia Pérez.
 7. Las decisiones se anotan en `docs/decisiones.md` al tomarlas.
 8. Si usáis código externo (tutoriales, Hugging Face, ChatGPT/Claude…), citadlo en el README.
 

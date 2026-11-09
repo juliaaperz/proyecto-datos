@@ -2,7 +2,7 @@
 
 Proyecto final de *Procesamiento de Datos*, Máster en Ingeniería de Telecomunicación (UC3M), curso 2026/27.
 
-**Equipo:** _Nombre 1_ · _Nombre 2_ · _Nombre 3_ · _Nombre 4_
+**Equipo:** Julia Pérez · Lucía Mora · Lucía Fournier · María Sánchez
 
 > Este README es el **informe** del proyecto. Las instrucciones para reproducirlo están al final.
 > _(Las secciones en cursiva son plantillas que hay que completar.)_
