@@ -1,0 +1,26 @@
+# Datos: NO se suben al repositorio (requisito del enunciado)
+data/
+*.xlsx
+*.zip
+*.npz
+*.parquet
+*.pkl
+
+# Modelos y cachés
+models/
+checkpoints/
+*.pt
+*.bin
+*.safetensors
+wandb/
+runs/
+
+# Python / Jupyter
+__pycache__/
+*.py[cod]
+.ipynb_checkpoints/
+.pytest_cache/
+.venv/
+venv/
+*.egg-info/
+.DS_Store

@@ -1,0 +1,45 @@
+{
+  "rule": "first",
+  "n_raw": 35378,
+  "n_without_codes": 3326,
+  "n_kept": 31951,
+  "pct_kept": 90.313,
+  "pct_kept_expected": 90.31,
+  "n_classes_l2": 39,
+  "n_classes_l1": 6,
+  "pct_unambiguous_l2": 32.2,
+  "pct_unambiguous_l1": 46.9,
+  "pct_change_majority_rule_l1": 11.5,
+  "pct_change_majority_rule_l2": 12.1,
+  "split_sizes": {
+    "train": 22366,
+    "val": 4792,
+    "test": 4793
+  },
+  "min_class_count_per_split": {
+    "test": 1,
+    "train": 7,
+    "val": 1
+  },
+  "summaries_in_several_splits": 0,
+  "baseline_l2_val": {
+    "majority_class": "49 - biological sciences",
+    "accuracy": 0.1083,
+    "macro_f1": 0.005
+  },
+  "baseline_l2_test": {
+    "majority_class": "49 - biological sciences",
+    "accuracy": 0.1083,
+    "macro_f1": 0.005
+  },
+  "baseline_l1_val": {
+    "majority_class": "23 - natural sciences",
+    "accuracy": 0.3919,
+    "macro_f1": 0.0939
+  },
+  "baseline_l1_test": {
+    "majority_class": "23 - natural sciences",
+    "accuracy": 0.3914,
+    "macro_f1": 0.0938
+  }
+}

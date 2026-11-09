@@ -1,0 +1,40 @@
+label_l1,label_l1_name,label_l2,label_l2_name,train,val,test,total
+23,natural sciences,49,biological sciences,2424,519,519,3462
+23,natural sciences,47,computer and information sciences,2037,436,436,2909
+23,natural sciences,43,physical sciences,1828,392,393,2613
+25,engineering and technology,67,environmental engineering,1415,303,304,2022
+21,medical and health sciences,35,basic medicine,1340,287,287,1914
+25,engineering and technology,73,"electrical engineering, electronic engineering, information engineering",1336,287,286,1909
+29,social sciences,91,economics and business,1328,283,284,1895
+21,medical and health sciences,39,clinical medicine,1321,283,283,1887
+23,natural sciences,53,chemical sciences,1110,238,237,1585
+29,social sciences,101,sociology,982,210,211,1403
+29,social sciences,99,social geography,803,172,172,1147
+23,natural sciences,45,earth and related environmental sciences,712,153,153,1018
+25,engineering and technology,63,materials engineering,669,143,143,955
+23,natural sciences,51,mathematics,646,140,138,924
+29,social sciences,97,political sciences,593,127,127,847
+21,medical and health sciences,37,medical biotechnology,495,106,106,707
+21,medical and health sciences,33,health sciences,431,92,92,615
+25,engineering and technology,75,mechanical engineering,397,85,85,567
+27,agricultural sciences,81,"agriculture, forestry, and fisheries",320,69,69,458
+31,humanities,113,history and archaeology,235,51,50,336
+25,engineering and technology,77,civil engineering,221,48,47,316
+31,humanities,107,languages and literature,217,46,47,310
+29,social sciences,93,psychology,201,43,43,287
+25,engineering and technology,69,nanotechnology,175,37,38,250
+31,humanities,111,"philosophy, ethics and religion",162,35,35,232
+25,engineering and technology,59,other engineering and technologies,155,33,33,221
+31,humanities,109,arts,136,29,29,194
+29,social sciences,89,law,103,22,22,147
+29,social sciences,105,educational sciences,95,21,21,137
+27,agricultural sciences,83,animal and dairy science,92,20,20,132
+25,engineering and technology,65,chemical engineering,91,19,20,130
+25,engineering and technology,57,medical engineering,90,19,19,128
+25,engineering and technology,61,industrial biotechnology,67,14,14,95
+31,humanities,115,other humanities,44,10,9,63
+29,social sciences,103,media and communications,29,6,6,41
+27,agricultural sciences,79,agricultural biotechnology,22,5,5,32
+25,engineering and technology,71,environmental biotechnology,21,4,5,30
+27,agricultural sciences,87,veterinary sciences,16,4,4,24
+21,medical and health sciences,41,other medical sciences,7,1,1,9
