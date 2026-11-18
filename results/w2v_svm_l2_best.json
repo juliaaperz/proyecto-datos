@@ -1,0 +1,92 @@
+{
+  "model": "w2v_svm_l2",
+  "seed": 42,
+  "level": 2,
+  "word2vec": {
+    "vector_size": 200,
+    "window": 5,
+    "min_count": 5,
+    "sg": 1,
+    "seed": 42,
+    "workers": 1,
+    "epochs": 10
+  },
+  "vocabulary_size": 22786,
+  "document_vector": "mean of known token vectors",
+  "oov_policy": "ignore; zero vector if no known tokens",
+  "scaler": "StandardScaler fitted only on train",
+  "best": {
+    "C": 0.03,
+    "class_weight": "balanced"
+  },
+  "val": {
+    "macro_f1": 0.29343189002210157
+  },
+  "classes": [
+    33,
+    35,
+    37,
+    39,
+    41,
+    43,
+    45,
+    47,
+    49,
+    51,
+    53,
+    57,
+    59,
+    61,
+    63,
+    65,
+    67,
+    69,
+    71,
+    73,
+    75,
+    77,
+    79,
+    81,
+    83,
+    87,
+    89,
+    91,
+    93,
+    97,
+    99,
+    101,
+    103,
+    105,
+    107,
+    109,
+    111,
+    113,
+    115
+  ],
+  "token_statistics": {
+    "train": {
+      "documents": 22366,
+      "total_tokens": 3496108,
+      "oov_tokens": 89813,
+      "oov_percent": 2.5689423782102843,
+      "documents_without_known_tokens": 1,
+      "documents_without_known_tokens_percent": 0.0044710721631047124
+    },
+    "val": {
+      "documents": 4792,
+      "total_tokens": 750172,
+      "oov_tokens": 27324,
+      "oov_percent": 3.642364684365719,
+      "documents_without_known_tokens": 0,
+      "documents_without_known_tokens_percent": 0.0
+    },
+    "test": {
+      "documents": 4793,
+      "total_tokens": 750480,
+      "oov_tokens": 26834,
+      "oov_percent": 3.5755782965568703,
+      "documents_without_known_tokens": 0,
+      "documents_without_known_tokens_percent": 0.0
+    }
+  }
+}
