@@ -256,8 +256,52 @@ mismo macro-F1 en validación (0,36) que la SVM, que tarda unos 5 s. Por eso se 
   class_weight="balanced")`.
 
 #### Red neuronal (PyTorch)
-_Pendiente._
+Se entrenó un perceptrón multicapa (MLP) en PyTorch con una capa
+oculta, activación ReLU, dropout y una salida de 39 clases.
+Se utilizó Adam y entropía cruzada con pesos de clase calculados
+exclusivamente con train. Las etiquetas originales se transformaron
+en índices consecutivos para entrenar y se recuperaron sus códigos
+originales al guardar las predicciones.
 
+Se compararon tres configuraciones:
+(256 neuronas, dropout=0.3, lr=0.001),
+(512 neuronas, dropout=0.3, lr=0.001) y
+(256 neuronas, dropout=0.5, lr=0.0003).
+Se emplearon batches de 64, un máximo de 30 épocas y early stopping
+tras cinco épocas sin mejorar el macro-F1 de validación.
+Para cada representación se recuperó la configuración y la época
+con mejor macro-F1 de validación.
+
+La entrada TF-IDF tiene 16.989 características y reutiliza los
+parámetros del vectorizador seleccionado para el SVM. El vocabulario
+y los pesos IDF se ajustaron solo con train. La matriz se mantuvo
+dispersa y se convirtió a denso únicamente cada batch.
+Para Word2Vec se utilizaron medias de vectores de 200 dimensiones,
+con StandardScaler ajustado solo con train.
+
+| Entrada | Capa oculta | Dropout | Learning rate | Mejor época | Macro-F1 val |
+|---|---:|---:|---:|---:|---:|
+| TF-IDF | 256 | 0.5 | 0.0003 | 21 | 0.3921 |
+| Word2Vec | 512 | 0.3 | 0.001 | 14 | 0.3305 |
+
+![Curvas de la red con TF-IDF](figures/nn_tfidf_l2_learning_curves.png)
+
+![Curvas de la red con Word2Vec](figures/nn_w2v_l2_learning_curves.png)
+
+Las pérdidas de ambas particiones se calcularon al final de cada
+época con dropout desactivado. La línea vertical señala la época
+recuperada mediante el criterio de macro-F1 en validación.
+
+En validación, el MLP con Word2Vec obtuvo 0.3305, frente a 0.2934
+del SVM con esa representación. Con TF-IDF, el MLP obtuvo 0.3921,
+frente a 0.4025 del SVM. Estas comparaciones son descriptivas:
+no establecen significación estadística ni sustituyen la evaluación
+final en test. En Word2Vec se observan señales de sobreajuste:
+la pérdida de train disminuye mientras aumenta la de validación.
+Dropout y early stopping reducen el riesgo, pero no lo eliminan.
+
+Las predicciones de test se guardaron sin calcular sus métricas.
+La comparación con embeddings congelados de BERT queda pendiente.
 #### Transformer con fine-tuning
 _Pendiente._
 
