@@ -73,7 +73,7 @@ Unigramas, `min_df=5`, `max_df=0,5`, `C=0,1`, `class_weight="balanced"`. Macro-F
 Se eligió con una búsqueda en dos fases sobre validación (23 configuraciones distintas; ver README §3).
 Criterio de selección: macro-F1 en val. Los pesos balanceados aportan +4,7 puntos; el resto de
 diferencias son de 1–2 puntos, probablemente dentro del ruido de validación.
-### Word2Vec + SVM — Lucía
+### Word2Vec + SVM
 
 Se entrenó Word2Vec exclusivamente con los documentos de train,
 utilizando los textos lematizados del preprocesamiento común,
@@ -107,3 +107,25 @@ fue C=0.03, con macro-F1 de validación de 0,2934.
 
 Se guardaron las predicciones de validación y test con columnas
 projectID, y_true e y_pred. No se calcularon métricas de test.
+
+### Red neuronal — Lucía
+
+- Arquitectura: una capa oculta, ReLU, dropout y salida de 39 clases.
+  Se eligió un MLP sencillo para comparar representaciones en CPU.
+- Entradas implementadas: TF-IDF y Word2Vec. BERT queda pendiente.
+- TF-IDF: mismos parámetros del vectorizador del SVM, ajustado solo
+  con train; conversión a denso por batch, sin StandardScaler.
+- Word2Vec: mismos parámetros que en Word2Vec + SVM; media de
+  palabras conocidas y StandardScaler ajustado solo con train.
+- Pesos de clase: n_train / (n_classes * frecuencia_en_train).
+- Optimización: Adam, batch_size=64, máximo de 30 épocas.
+- Semillas: Python, NumPy y PyTorch a 42; PYTHONHASHSEED=42.
+- Búsqueda: (hidden, dropout, lr) = (256, 0.3, 0.001),
+  (512, 0.3, 0.001) y (256, 0.5, 0.0003).
+- Selección de configuración y época por macro-F1 de validación.
+  Early stopping con paciencia de cinco épocas.
+- TF-IDF: configuración elegida (256, 0.5, 0.0003), época 21.
+- Word2Vec: configuración elegida (512, 0.3, 0.001), época 14.
+- Se guardan los historiales de todas las configuraciones y las
+  curvas de la configuración seleccionada.
+- No se calculan métricas de test para tomar decisiones.
