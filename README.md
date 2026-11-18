@@ -201,7 +201,32 @@ vocabulario y los pesos IDF se **ajustan solo con train**. Los hiperparámetros 
 * **Elegido:** unigramas, `min_df=5`, `max_df=0,5`, con 16.989 términos.
 
 #### Word2Vec
-_Pendiente (bloque de Lucía Fournier)._
+Se entrenó un modelo Word2Vec skip-gram exclusivamente sobre train,
+con vectores de 200 dimensiones, ventana de 5 palabras, frecuencia
+mínima de 5 y 10 épocas. El vocabulario resultante contiene 22.786
+palabras. Cada documento se representó mediante la media de los
+vectores de sus palabras conocidas; las palabras fuera del vocabulario
+se ignoraron. El porcentaje OOV fue del 2,57 % en train y del 3,64 %
+en validación. Un documento de train quedó sin palabras conocidas
+y se representó con un vector de ceros. El promedio permite obtener
+una representación de tamaño fijo, pero pierde el orden de las palabras.
+
+Los vectores se estandarizaron con StandardScaler ajustado solo
+con train y se clasificaron mediante LinearSVC con pesos de clase
+balanceados. Se probaron C = 0.03, 0.1, 0.3, 1, 3 y 10.
+La mejor configuración entre las probadas obtuvo un macro-F1 de
+0,2934 en validación con C=0.03. Las predicciones de test se guardaron
+para la evaluación conjunta del equipo, sin utilizar sus métricas
+para seleccionar el modelo.
+
+| C | Macro-F1 en validación |
+|---|---:|
+| 0.03 | 0.2934 |
+| 0.1 | 0.2892 |
+| 0.3 | 0.2852 |
+| 1 | 0.2848 |
+| 3 | 0.2828 |
+| 10 | 0.2825 |
 
 #### Embeddings contextuales
 _Pendiente (bloque de María Sánchez)._
