@@ -73,3 +73,25 @@ Unigramas, `min_df=5`, `max_df=0,5`, `C=0,1`, `class_weight="balanced"`. Macro-F
 Se eligió con una búsqueda en dos fases sobre validación (23 configuraciones distintas; ver README §3).
 Criterio de selección: macro-F1 en val. Los pesos balanceados aportan +4,7 puntos; el resto de
 diferencias son de 1–2 puntos, probablemente dentro del ruido de validación.
+
+## D8. Extensión: metadatos frente a texto
+
+Se usan coste total, contribución UE, duración en meses (días / 30,4375), país coordinador
+y número de países participantes. En countryContr se cuentan países distintos, también
+con contribución cero. No se usan topic, topic_title ni fundingScheme.
+
+Se aplica log(1 + importe) a coste y contribución para reducir el efecto de extremos;
+los importes negativos se tratan como ausentes. Se imputan valores numéricos con la mediana de train y se añaden indicadores de ausencia.
+Los países con menos de 100 proyectos en train se agrupan en Otros; los países nuevos
+también van a Otros. El one-hot, las medianas, el escalado y TF-IDF se ajustan solo con train.
+
+Se comparan RandomForest (8 configuraciones), TF-IDF + SVM con su configuración previa
+y TF-IDF + metadatos con LinearSVC (8 configuraciones). La selección utiliza macro-F1
+de validación con la partición común y semilla 42. Se guardan predicciones de test sin
+calcular métricas de test. Las diferencias por clase son descriptivas y deben leerse
+junto con el soporte; no se interpretan como mejoras significativas sin incertidumbre.
+
+En la combinación se divide el bloque de metadatos por la norma RMS de sus filas
+de entrenamiento, para igualar su norma cuadrática media a 1, como el bloque TF-IDF.
+Es un único factor calculado con train: conserva las relaciones entre variables y
+evita que el tamaño del bloque determine por sí solo el peso frente al texto.

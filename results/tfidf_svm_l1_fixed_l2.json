@@ -1,0 +1,20 @@
+{
+  "best": {
+    "clf": {
+      "C": 0.1,
+      "class_weight": "balanced"
+    },
+    "vec": {
+      "max_df": 0.5,
+      "min_df": 5,
+      "ngram_range": [
+        1,
+        1
+      ]
+    }
+  },
+  "level": 1,
+  "configuration_selected_at_level": 2,
+  "val_accuracy": 0.6579716193656093,
+  "val_macro_f1": 0.6126312797980976
+}

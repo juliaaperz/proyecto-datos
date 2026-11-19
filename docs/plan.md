@@ -50,3 +50,20 @@ debe poder defender todo el proyecto**, porque la presentación es individual.
       o zero-shot con un LLM (más original y más costosa). Decidir antes del 22-nov.
 - [ ] Confirmar con el profesor la regla de etiquetado (ver D1).
 - [ ] Modelo Transformer base: `bert-base-uncased`, `roberta-base` o `allenai/scibert_scivocab_uncased`.
+
+## Seguimiento de Lucía Mora
+
+El reparto actualizado comunicado por el equipo asigna a Lucía Mora la extensión
+de metadatos, la comparación de nivel 1 y la coordinación de diapositivas.
+
+| Trabajo | Estado |
+|---|---|
+| Preparación local, preprocesado y reproducción TF-IDF + SVM | Comprobado |
+| Revisión del EDA y conclusiones | Incorporado mediante PR |
+| Extensión metadatos / texto / combinación | Ejecutada en nivel 2; resultados documentados en README sección 5 |
+| Nivel 1 para las tres representaciones | TF-IDF ejecutado; pendientes Word2Vec y embeddings contextuales |
+| Coordinación de diapositivas | Pendiente |
+
+Se han ejecutado los 4 tests existentes y añadido 2 pruebas para el cómputo de países
+y la transformación de validación sin ajustar estadísticas fuera de train: 6 tests superados.
+Apoyo de ChatGPT/Codex en implementación, revisión y documentación.
