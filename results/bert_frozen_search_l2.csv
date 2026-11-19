@@ -1,0 +1,17 @@
+pooling,C,class_weight,macro_f1,accuracy
+mean,10.0,None,1.0,1.0
+mean,10.0,balanced,1.0,1.0
+cls,10.0,balanced,1.0,1.0
+cls,10.0,None,1.0,1.0
+mean,0.1,balanced,0.0,0.0
+mean,0.1,None,0.0,0.0
+mean,0.01,None,0.0,0.0
+mean,0.01,balanced,0.0,0.0
+mean,1.0,None,0.0,0.0
+mean,1.0,balanced,0.0,0.0
+cls,0.01,None,0.0,0.0
+cls,0.01,balanced,0.0,0.0
+cls,0.1,balanced,0.0,0.0
+cls,0.1,None,0.0,0.0
+cls,1.0,balanced,0.0,0.0
+cls,1.0,None,0.0,0.0

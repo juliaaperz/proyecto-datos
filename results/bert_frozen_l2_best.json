@@ -1,0 +1,31 @@
+{
+  "model": "bert_frozen_l2",
+  "best": {
+    "clf": {
+      "C": 10.0,
+      "class_weight": "None"
+    },
+    "emb": {
+      "model_name": "bert-base-uncased",
+      "pooling": "mean",
+      "max_length": 512,
+      "truncated_docs": 0,
+      "truncated_pct": 0.0,
+      "frozen": true
+    }
+  },
+  "val": {
+    "dim": 768,
+    "macro_f1": 1.0,
+    "micro_f1": 1.0,
+    "weighted_f1": 1.0,
+    "accuracy": 1.0
+  },
+  "n_train": 1,
+  "n_val": 2,
+  "n_test": 1,
+  "seed": 42,
+  "classes": [
+    79
+  ]
+}
