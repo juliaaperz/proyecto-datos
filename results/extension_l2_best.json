@@ -1,0 +1,96 @@
+{
+  "level": 2,
+  "seed": 42,
+  "selection": "macro_f1_val",
+  "train": 22366,
+  "val": 4792,
+  "test": 4793,
+  "metadata": [
+    "totalCost",
+    "ecMaxContribution",
+    "duration_months",
+    "coordinatorCountry",
+    "n_countries"
+  ],
+  "combined_metadata_scale_rms_train": 2.4494898319244385,
+  "country_threshold_train": 100,
+  "common_countries": [
+    "AT",
+    "BE",
+    "CH",
+    "CY",
+    "CZ",
+    "DE",
+    "DK",
+    "EE",
+    "EL",
+    "ES",
+    "FI",
+    "FR",
+    "HU",
+    "IE",
+    "IL",
+    "IT",
+    "NL",
+    "NO",
+    "PL",
+    "PT",
+    "SE",
+    "SI",
+    "TR",
+    "UK"
+  ],
+  "text_config": {
+    "clf": {
+      "C": 0.1,
+      "class_weight": "balanced"
+    },
+    "vec": {
+      "max_df": 0.5,
+      "min_df": 5,
+      "ngram_range": [
+        1,
+        1
+      ]
+    }
+  },
+  "models": {
+    "meta": {
+      "best": {
+        "max_depth": null,
+        "min_samples_leaf": 2,
+        "class_weight": null
+      },
+      "val": {
+        "macro_f1": 0.05396508825907852,
+        "accuracy": 0.15254590984974958
+      }
+    },
+    "text": {
+      "best": {
+        "C": 0.1,
+        "class_weight": "balanced"
+      },
+      "val": {
+        "macro_f1": 0.4025024436872183,
+        "accuracy": 0.493322203672788
+      }
+    },
+    "text_meta": {
+      "best": {
+        "C": 0.3,
+        "class_weight": "balanced"
+      },
+      "val": {
+        "macro_f1": 0.3890512787537235,
+        "accuracy": 0.5062604340567612
+      }
+    },
+    "majority": {
+      "val": {
+        "macro_f1": 0.005011369726112712,
+        "accuracy": 0.10830550918196995
+      }
+    }
+  }
+}

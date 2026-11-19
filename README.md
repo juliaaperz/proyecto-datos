@@ -289,13 +289,71 @@ _Resultados preliminares en **validación** (los de test se calcularán al final
 | SVM lineal (C=0,1, balanced) | TF-IDF | 0,493 | 0,403 |
 
 ### 4.2. Nivel 1 frente a nivel 2
+
+Se mantiene la partición común. Primero repetimos en las 6 clases de nivel 1
+la configuración elegida en nivel 2. También mostramos una búsqueda específica
+para nivel 1, separada de esa comparación. Todas las métricas son de validación.
+
+| Modelo | Configuración | Accuracy val | Macro-F1 val |
+|---|---|---:|---:|
+| TF-IDF + SVM, nivel 2 | Elegida en nivel 2 | 0,4933 | 0,4025 |
+| TF-IDF + SVM, nivel 1 | Misma que nivel 2 | 0.6580 | 0.6126 |
+| TF-IDF + SVM, nivel 1 | Ajustada para nivel 1 | 0.6730 | 0.6270 |
+
+Con etiquetas más generales es más fácil acertar. Las métricas corresponden a
+problemas distintos (39 frente a 6 clases), por lo que no deben interpretarse
+como una mejora del modelo en una misma tarea. Para comparar el ranking entre
+TF-IDF, Word2Vec y embeddings contextuales faltan los resultados de las otras
+representaciones en nivel 1.
+
+Reproducción: `python scripts/compare_levels_tfidf.py` (configuración fija) y
+`python scripts/tfidf_svm.py --level 1` (búsqueda específica). Las predicciones
+se guardan separadas para evitar confundir ambos experimentos.
+
 ### 4.3. Análisis de errores (confusiones entre hermanas, predicciones en etiquetas descartadas)
 
-## 5. Extensión
+## 5. Extensión: ¿qué aporta el texto?
+
+Comparamos los mismos proyectos y la misma partición con tres tipos de entrada: metadatos, texto y su combinación. Elegimos los modelos por macro-F1 de validación; no utilizamos test para tomar decisiones.
+
+Los metadatos son coste total, contribución de la UE, duración en meses, país coordinador y número de países participantes. No usamos topic, topic_title ni fundingScheme porque describen la convocatoria y podrían dar una pista demasiado directa de la temática.
+
+Aplicamos log(1 + importe) a los costes. Imputamos ausentes, escalamos y ajustamos el one-hot solo con train. Los países con menos de 100 proyectos de entrenamiento se agrupan en Otros. El vocabulario e IDF también se ajustan solo con train. Para combinarlo con TF-IDF, dividimos el bloque de metadatos por la norma RMS de sus filas de entrenamiento: así ambos bloques tienen norma cuadrática media comparable.
+
+Probamos 8 RandomForest para metadatos y 8 LinearSVC para la combinación. El modelo de texto conserva su configuración elegida anteriormente. Es una búsqueda limitada: no demuestra que hayamos encontrado el mejor clasificador posible para cada representación.
+
+| Entrada | Accuracy val | Macro-F1 val |
+|---|---:|---:|
+| Clase mayoritaria | 0.1083 | 0.0050 |
+| Metadatos | 0.1525 | 0.0540 |
+| Texto | 0.4933 | 0.4025 |
+| Texto + metadatos | 0.5063 | 0.3891 |
+
+Solo metadatos obtiene macro-F1 0.0540, frente a 0.0050 del baseline. La diferencia entre combinación y texto es de -1.35 puntos de macro-F1. Esta diferencia es descriptiva: falta estimar su incertidumbre antes de afirmar una mejora general.
+
+La combinación gana aproximadamente 1,29 puntos de accuracy y pierde 1,35 puntos de macro-F1 frente al texto. Por tanto, según la métrica principal no mejora en esta búsqueda. Esto no descarta que otra representación de metadatos u otra combinación pueda ayudar.
+
+Las diferencias por clase, junto con el soporte de validación, se guardan en results/extension_per_class_l2.csv. Por ejemplo, economics and business sube de F1 0,5281 a 0,5753 (283 ejemplos de validación). Medical engineering sube de 0,2250 a 0,2857 (19 ejemplos), y educational sciences de 0,2535 a 0,3137 (21 ejemplos). También hay caídas: agricultural biotechnology pasa de 0,4000 a 0,0000, pero solo tiene 5 ejemplos en validación. Las clases pequeñas pueden cambiar mucho con solo uno o dos aciertos.
+
+![Coste por área](figures/extension_cost_by_l1.png)
+
+La figura describe solo entrenamiento y representa log(1 + coste), para que los proyectos de mayor presupuesto no oculten los demás. Las diferencias de coste entre áreas no implican una relación causal.
+
+Código: scripts/extension_metadata.py. Configuraciones y métricas: results/extension_search_l2.csv y results/extension_l2_best.json. Se guardan las predicciones de val y test de cada modelo en results/preds/; las métricas de test se reservan para la evaluación común.
 
 ## 6. Conclusiones y limitaciones
 
 ## 7. Contribuciones y reconocimiento de fuentes
+
+### Lucía Mora
+
+Preparación y comprobación del entorno, reproducción del preprocesado y TF-IDF + SVM,
+revisión del EDA e implementación de la extensión con metadatos. Se han ejecutado
+los 4 tests existentes y añadido 2 pruebas para la extracción de países y el ajuste
+exclusivo con entrenamiento. TF-IDF también se ha evaluado en nivel 1, con configuración fija y con búsqueda propia. Faltan las otras representaciones en nivel 1 y la coordinación de diapositivas.
+Se ha utilizado ChatGPT/Codex como apoyo para implementar, comprobar y documentar el código;
+La revisión final del equipo sigue pendiente.
+
 
 ---
 
