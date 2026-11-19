@@ -17,7 +17,7 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 from gensim.models import Word2Vec
-from sklearn.metrics import f1_score
+from sklearn.metrics import accuracy_score, f1_score
 from sklearn.preprocessing import StandardScaler
 from sklearn.svm import LinearSVC
 
@@ -76,7 +76,13 @@ def document_vectors(documents, keyed_vectors):
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--level", type=int, choices=[1, 2], default=2)
+    parser.add_argument("--fixed-from-level2", action="store_true", help="Repite en nivel 1 la configuración elegida en nivel 2.")
     args = parser.parse_args()
+    if args.fixed_from_level2 and args.level != 1:
+        parser.error("--fixed-from-level2 requiere --level 1")
+    reference = None
+    if args.fixed_from_level2:
+        reference = json.loads((config.RESULTS_DIR / "w2v_svm_l2_best.json").read_text(encoding="utf-8"))
 
     random.seed(SEED)
     np.random.seed(SEED)
@@ -154,6 +160,11 @@ def main():
         "epochs": 10,
     }
 
+    if reference is not None:
+        w2v_parameters = reference["word2vec"]
+        if w2v_parameters["vector_size"] != VECTOR_SIZE:
+            raise ValueError("La dimensión de referencia no coincide con VECTOR_SIZE.")
+
     print("Entrenando Word2Vec solo con train...", flush=True)
 
     w2v = Word2Vec(
@@ -177,16 +188,18 @@ def main():
     pred_dir = results_dir / "preds"
     pred_dir.mkdir(parents=True, exist_ok=True)
 
-    name = f"w2v_svm_l{args.level}"
+    name = f"w2v_svm_l{args.level}" + ("_fixed_l2" if reference is not None else "")
     search_rows = []
     best_model = None
     best_c = None
     best_f1 = -1.0
 
-    for c in C_VALUES:
+    c_values = [reference["best"]["C"]] if reference is not None else C_VALUES
+    class_weight = reference["best"]["class_weight"] if reference is not None else "balanced"
+    for c in c_values:
         model = LinearSVC(
             C=c,
-            class_weight="balanced",
+            class_weight=class_weight,
             random_state=SEED,
             max_iter=10000,
         )
@@ -204,12 +217,12 @@ def main():
 
         search_rows.append({
             "C": c,
-            "class_weight": "balanced",
+            "class_weight": class_weight,
             "val_macro_f1": float(score),
         })
 
         pd.DataFrame(search_rows).to_csv(
-            results_dir / f"w2v_svm_search_l{args.level}.csv",
+            results_dir / (f"{name}_search.csv" if reference is not None else f"w2v_svm_search_l{args.level}.csv"),
             index=False,
         )
 
@@ -252,9 +265,10 @@ def main():
         "scaler": "StandardScaler fitted only on train",
         "best": {
             "C": best_c,
-            "class_weight": "balanced",
+            "class_weight": class_weight,
         },
-        "val": {"macro_f1": best_f1},
+        "val": {"macro_f1": best_f1, "accuracy": float(accuracy_score(val[label], best_model.predict(x_val)))},
+        "configuration_selected_at_level": 2 if reference is not None else args.level,
         "classes": best_model.classes_.tolist(),
         "token_statistics": {
             "train": train_stats,

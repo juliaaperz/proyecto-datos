@@ -1,0 +1,49 @@
+{
+  "protocol": "validation_only; level1 uses configuration selected at level2",
+  "pending": [
+    "Embeddings contextuales: faltan los modelos y sus predicciones de validación en ambos niveles."
+  ],
+  "complete_three_representations": false,
+  "rows": [
+    {
+      "representation": "TF-IDF",
+      "level": 1,
+      "split": "val",
+      "n": 4792,
+      "accuracy": 0.6579716193656093,
+      "macro_f1": 0.6126312797980976,
+      "source": "results\\preds\\tfidf_svm_l1_fixed_l2_val.csv",
+      "rank_among_available": 1
+    },
+    {
+      "representation": "TF-IDF",
+      "level": 2,
+      "split": "val",
+      "n": 4792,
+      "accuracy": 0.493322203672788,
+      "macro_f1": 0.4025024436872183,
+      "source": "results\\preds\\tfidf_svm_l2_val.csv",
+      "rank_among_available": 1
+    },
+    {
+      "representation": "Word2Vec",
+      "level": 1,
+      "split": "val",
+      "n": 4792,
+      "accuracy": 0.6264607679465777,
+      "macro_f1": 0.574242200609301,
+      "source": "results\\preds\\w2v_svm_l1_fixed_l2_val.csv",
+      "rank_among_available": 2
+    },
+    {
+      "representation": "Word2Vec",
+      "level": 2,
+      "split": "val",
+      "n": 4792,
+      "accuracy": 0.3958681135225376,
+      "macro_f1": 0.29343189002210157,
+      "source": "results\\preds\\w2v_svm_l2_val.csv",
+      "rank_among_available": 2
+    }
+  ]
+}
