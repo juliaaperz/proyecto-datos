@@ -113,8 +113,8 @@ Un proyecto sobre fases topológicas en materia condensada, que es física, apar
   resúmenes a unos **2.000 caracteres**, y alrededor del 25 % están pegados a ese límite, así
   que probablemente están recortados. Por eso la distribución cae de golpe en torno a 300
   palabras.
-* **Implicación para los Transformers:** con este límite, casi ningún resumen supera los 512
-  tokens. Truncar es suficiente y no hace falta trocear (hay que comprobarlo con el tokenizador).
+* **Implicación para los Transformers:** la longitud en palabras solo ofrece una aproximación. Se comprobarán
+  las longitudes con el tokenizador real antes de decidir si truncar o trocear.
 * **Anomalías:** 25 resúmenes tienen menos de 30 palabras. Algunos son solo el título o, en un
   caso, solo la palabra «H2020». Se mantienen, pero se documentan.
 

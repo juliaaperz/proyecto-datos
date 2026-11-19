@@ -6,6 +6,7 @@ Por eso aquí se devuelven objetos sin ajustar, para meterlos en un Pipeline.
 """
 from __future__ import annotations
 
+import numpy as np
 from sklearn.feature_extraction.text import TfidfVectorizer
 
 
@@ -20,5 +21,5 @@ def make_tfidf(min_df=5, max_df=0.5, ngram_range=(1, 1), max_features=None,
     return TfidfVectorizer(
         lowercase=False, token_pattern=r"\S+",     # el texto ya viene tokenizado y en minúsculas
         min_df=min_df, max_df=max_df, ngram_range=tuple(ngram_range),
-        max_features=max_features, sublinear_tf=sublinear_tf, dtype="float32",
+        max_features=max_features, sublinear_tf=sublinear_tf, dtype=np.float32,
     )
