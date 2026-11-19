@@ -95,3 +95,38 @@ En la combinación se divide el bloque de metadatos por la norma RMS de sus fila
 de entrenamiento, para igualar su norma cuadrática media a 1, como el bloque TF-IDF.
 Es un único factor calculado con train: conserva las relaciones entre variables y
 evita que el tamaño del bloque determine por sí solo el peso frente al texto.
+
+## D9. Word2Vec + SVM — Lucía Fournier
+
+Se entrenó Word2Vec exclusivamente con los documentos de train,
+utilizando los textos lematizados del preprocesamiento común,
+convertidos en listas de palabras mediante split().
+Se utilizó skip-gram (sg=1), vector_size=200, window=5,
+min_count=5, 10 épocas, seed=42 y workers=1.
+También se fijó PYTHONHASHSEED=42 antes de ejecutar el script.
+
+Se eligió entrenar los embeddings con el corpus para aprender
+relaciones entre términos propios de los proyectos de investigación.
+El vocabulario obtenido contiene 22.786 palabras. No se comparó
+esta primera versión con vectores preentrenados.
+
+Cada documento se representó mediante la media simple de los
+vectores de sus palabras conocidas. Se ignoraron las palabras OOV;
+si no había ninguna palabra conocida, se asignó un vector de ceros.
+Este promedio pierde el orden de las palabras y no representa
+explícitamente su contexto dentro del documento.
+
+El porcentaje OOV se calculó sobre las apariciones de tokens:
+2,5689 % en train, 3,6424 % en validación y 3,5756 % en test.
+Hubo un documento sin palabras conocidas en train y ninguno
+en validación ni test. Las estadísticas de test se registraron
+después de seleccionar el modelo y no se utilizaron para ajustarlo.
+
+Se aplicó StandardScaler ajustado exclusivamente con train.
+El clasificador fue LinearSVC con class_weight="balanced".
+Se probaron C = 0.03, 0.1, 0.3, 1, 3 y 10, seleccionando
+por macro-F1 en validación. El mejor valor entre los probados
+fue C=0.03, con macro-F1 de validación de 0,2934.
+
+Se guardaron las predicciones de validación y test con columnas
+projectID, y_true e y_pred. No se calcularon métricas de test.
