@@ -15,7 +15,7 @@ tabulate>=0.9
 # Semanas 2-4 (descomentar cuando se usen)
 # seaborn>=0.13
 spacy>=3.7          # + python -m spacy download en_core_web_sm
-# gensim>=4.3
+gensim>=4.4
 # torch>=2.1
 # transformers>=4.40
 # datasets>=2.18

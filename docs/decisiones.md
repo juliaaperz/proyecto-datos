@@ -130,3 +130,15 @@ fue C=0.03, con macro-F1 de validación de 0,2934.
 
 Se guardaron las predicciones de validación y test con columnas
 projectID, y_true e y_pred. No se calcularon métricas de test.
+
+## D10. Comparación de representaciones entre niveles
+
+Se repiten en nivel 1 los hiperparámetros elegidos en nivel 2 para TF-IDF y Word2Vec.
+Word2Vec usa la misma configuración no supervisada, ajustada solo con train,
+y C=0,03 balanced para la SVM. Se fija PYTHONHASHSEED=42 antes de lanzar el proceso.
+Las salidas con sufijo fixed_l2 se mantienen separadas de las búsquedas por nivel.
+
+La comparación usa únicamente validación, alinea por projectID y verifica los IDs
+y etiquetas contra la partición común. Rechaza duplicados, faltantes y clases inválidas.
+No se comparan métricas de test. La representación contextual queda pendiente hasta
+disponer del modelo y sus predicciones; no se completa con valores inventados.

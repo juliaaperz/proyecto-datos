@@ -290,25 +290,33 @@ _Resultados preliminares en **validación** (los de test se calcularán al final
 
 ### 4.2. Nivel 1 frente a nivel 2
 
-Se mantiene la partición común. Primero repetimos en las 6 clases de nivel 1
-la configuración elegida en nivel 2. También mostramos una búsqueda específica
-para nivel 1, separada de esa comparación. Todas las métricas son de validación.
+Se mantiene la partición común y se repite en nivel 1 la configuración elegida en nivel 2. Los modelos se entrenan con las etiquetas del nivel correspondiente. El vocabulario, Word2Vec y los scalers se ajustan solo con train. Las métricas siguientes son de validación.
 
-| Modelo | Configuración | Accuracy val | Macro-F1 val |
-|---|---|---:|---:|
-| TF-IDF + SVM, nivel 2 | Elegida en nivel 2 | 0,4933 | 0,4025 |
-| TF-IDF + SVM, nivel 1 | Misma que nivel 2 | 0.6580 | 0.6126 |
-| TF-IDF + SVM, nivel 1 | Ajustada para nivel 1 | 0.6730 | 0.6270 |
+| Representación | Nivel | Accuracy val | Macro-F1 val |
+|---|---:|---:|---:|
+| TF-IDF | 1 | 0.6580 | 0.6126 |
+| TF-IDF | 2 | 0.4933 | 0.4025 |
+| Word2Vec | 1 | 0.6265 | 0.5742 |
+| Word2Vec | 2 | 0.3959 | 0.2934 |
 
-Con etiquetas más generales es más fácil acertar. Las métricas corresponden a
-problemas distintos (39 frente a 6 clases), por lo que no deben interpretarse
-como una mejora del modelo en una misma tarea. Para comparar el ranking entre
-TF-IDF, Word2Vec y embeddings contextuales faltan los resultados de las otras
-representaciones en nivel 1.
+Orden entre las representaciones disponibles: nivel 2, TF-IDF > Word2Vec; nivel 1, TF-IDF > Word2Vec. Este orden describe esta validación; no demuestra diferencias significativas.
 
-Reproducción: `python scripts/compare_levels_tfidf.py` (configuración fija) y
-`python scripts/tfidf_svm.py --level 1` (búsqueda específica). Las predicciones
-se guardan separadas para evitar confundir ambos experimentos.
+Las áreas de nivel 1 son más generales y la tarea pasa de 39 a 6 clases. El aumento de métricas entre niveles no debe interpretarse como una mejora en una misma tarea. Falta la representación contextual para completar el ranking de las tres representaciones.
+
+Por separado, TF-IDF ajustado específicamente en nivel 1 obtiene macro-F1 0.6270. No se mezcla este resultado con la comparación de configuración fija.
+
+Reproducción de la comparación fija:
+
+```powershell
+python scripts/compare_levels_tfidf.py
+$env:PYTHONHASHSEED="42"
+python scripts/w2v_svm.py --level 1 --fixed-from-level2
+python scripts/compare_representations_levels.py
+```
+
+La tabla y el estado pendiente se guardan en results/representations_levels_val.csv, .json y .md. El script comprueba los IDs y las etiquetas de cada predicción; no lee predicciones de test.
+
+Cuando estén disponibles los CSV contextuales de validación con configuración fija, pueden incorporarse con --contextual-l1-val y --contextual-l2-val. El entrenamiento del modelo contextual corresponde a su bloque y sigue pendiente en el código disponible.
 
 ### 4.3. Análisis de errores (confusiones entre hermanas, predicciones en etiquetas descartadas)
 
@@ -350,7 +358,7 @@ Código: scripts/extension_metadata.py. Configuraciones y métricas: results/ext
 Preparación y comprobación del entorno, reproducción del preprocesado y TF-IDF + SVM,
 revisión del EDA e implementación de la extensión con metadatos. Se han ejecutado
 los 4 tests existentes y añadido 2 pruebas para la extracción de países y el ajuste
-exclusivo con entrenamiento. TF-IDF también se ha evaluado en nivel 1, con configuración fija y con búsqueda propia. Faltan las otras representaciones en nivel 1 y la coordinación de diapositivas.
+exclusivo con entrenamiento. TF-IDF también se ha evaluado en nivel 1, con configuración fija y con búsqueda propia. Word2Vec también se ha evaluado con la configuración de nivel 2. Quedan los embeddings contextuales en nivel 1 y la coordinación de diapositivas.
 Se ha utilizado ChatGPT/Codex como apoyo para implementar, comprobar y documentar el código;
 La revisión final del equipo sigue pendiente.
 

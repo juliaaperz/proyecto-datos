@@ -61,9 +61,14 @@ de metadatos, la comparación de nivel 1 y la coordinación de diapositivas.
 | Preparación local, preprocesado y reproducción TF-IDF + SVM | Comprobado |
 | Revisión del EDA y conclusiones | Incorporado mediante PR |
 | Extensión metadatos / texto / combinación | Ejecutada en nivel 2; resultados documentados en README sección 5 |
-| Nivel 1 para las tres representaciones | TF-IDF ejecutado; pendientes Word2Vec y embeddings contextuales |
+| Nivel 1 para las tres representaciones | TF-IDF y Word2Vec ejecutados con configuración fija; pendientes embeddings contextuales |
 | Coordinación de diapositivas | Pendiente |
 
 Se han ejecutado los 4 tests existentes y añadido 2 pruebas para el cómputo de países
 y la transformación de validación sin ajustar estadísticas fuera de train: 6 tests superados.
 Apoyo de ChatGPT/Codex en implementación, revisión y documentación.
+
+Actualización de nivel 1: se incorpora la comparación TF-IDF/Word2Vec con configuración
+elegida en nivel 2. Se añaden 5 casos de prueba para validar IDs, orden, etiquetas y clases
+de los CSV: 11 tests superados en total. El modelo contextual no está en main ni en
+la rama transformers consultada; el informe lo marca pendiente.

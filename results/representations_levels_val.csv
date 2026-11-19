@@ -1,0 +1,5 @@
+representation,level,split,n,accuracy,macro_f1,source,rank_among_available
+TF-IDF,1,val,4792,0.6579716193656093,0.6126312797980976,results\preds\tfidf_svm_l1_fixed_l2_val.csv,1
+TF-IDF,2,val,4792,0.493322203672788,0.4025024436872183,results\preds\tfidf_svm_l2_val.csv,1
+Word2Vec,1,val,4792,0.6264607679465777,0.574242200609301,results\preds\w2v_svm_l1_fixed_l2_val.csv,2
+Word2Vec,2,val,4792,0.3958681135225376,0.29343189002210157,results\preds\w2v_svm_l2_val.csv,2
